@@ -1,0 +1,2373 @@
+ ```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#4f46e5" />
+  <title>ExamForge | Teacher-Made Digital Exam</title>
+
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #3730a3;
+      --primary-light: #eef2ff;
+      --ink: #172033;
+      --text: #34405a;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --background: #f6f7fb;
+      --white: #ffffff;
+      --green: #15815e;
+      --green-light: #e8f8f1;
+      --red: #c43d58;
+      --red-light: #fff0f3;
+      --orange: #c56a13;
+      --orange-light: #fff5e9;
+      --shadow: 0 18px 55px rgba(27, 38, 65, 0.10);
+      --radius: 22px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 0%, rgba(99, 102, 241, 0.10), transparent 28rem),
+        radial-gradient(circle at 90% 12%, rgba(20, 184, 166, 0.08), transparent 26rem),
+        var(--background);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    button,
+    textarea,
+    select,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    button:focus-visible,
+    textarea:focus-visible,
+    select:focus-visible {
+      outline: 3px solid rgba(79, 70, 229, 0.28);
+      outline-offset: 2px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 72px;
+      padding: 12px clamp(18px, 6vw, 80px);
+      background: rgba(255, 255, 255, 0.87);
+      border-bottom: 1px solid rgba(229, 231, 235, 0.9);
+      backdrop-filter: blur(14px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      color: white;
+      background: linear-gradient(135deg, #6366f1, #4338ca);
+      border-radius: 14px;
+      box-shadow: 0 8px 18px rgba(79, 70, 229, 0.25);
+      font-size: 21px;
+    }
+
+    .brand-name {
+      display: block;
+      font-size: 17px;
+      font-weight: 850;
+      letter-spacing: -0.04em;
+    }
+
+    .brand-subtitle {
+      display: block;
+      margin-top: 1px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .top-button {
+      padding: 10px 14px;
+      color: #3f4655;
+      background: #f3f4f6;
+      border: 0;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 750;
+      transition: 0.16s ease;
+    }
+
+    .top-button:hover {
+      background: #e5e7eb;
+    }
+
+    main {
+      width: min(100% - 30px, 900px);
+      margin: 0 auto;
+      padding: 48px 0 72px;
+    }
+
+    .screen {
+      animation: pageIn 0.28s ease both;
+    }
+
+    @keyframes pageIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero {
+      max-width: 720px;
+      margin: 0 auto 29px;
+      text-align: center;
+    }
+
+    .hero-icon {
+      display: grid;
+      width: 68px;
+      height: 68px;
+      place-items: center;
+      margin: 0 auto 17px;
+      background: var(--primary-light);
+      border: 1px solid #dcdefe;
+      border-radius: 22px;
+      font-size: 33px;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--primary);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    .hero h1 {
+      max-width: 710px;
+      margin: 0 auto;
+      font-size: clamp(34px, 7vw, 58px);
+      line-height: 1.04;
+      letter-spacing: -0.06em;
+    }
+
+    .hero-copy {
+      max-width: 610px;
+      margin: 18px auto 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .setup-card {
+      padding: clamp(22px, 5vw, 38px);
+    }
+
+    .card-title-row,
+    .exam-heading,
+    .progress-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .card-title-row {
+      margin-bottom: 26px;
+    }
+
+    .card-title-row h2 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: -0.04em;
+    }
+
+    .ready-badge {
+      padding: 7px 11px;
+      color: var(--green);
+      background: var(--green-light);
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 850;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 9px;
+      color: #394255;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 230px;
+      padding: 16px;
+      resize: vertical;
+      color: var(--ink);
+      background: #fcfcfd;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      line-height: 1.58;
+      transition: border-color 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.10);
+    }
+
+    .upload-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 13px 0 25px;
+    }
+
+    #fileInput {
+      display: none;
+    }
+
+    .upload-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 10px 13px;
+      color: var(--primary);
+      background: var(--primary-light);
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .file-name {
+      overflow: hidden;
+      max-width: 330px;
+      color: var(--muted);
+      font-size: 12px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .settings {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-bottom: 21px;
+    }
+
+    select {
+      width: 100%;
+      min-height: 47px;
+      padding: 0 12px;
+      color: var(--ink);
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+    }
+
+    .subject-box {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      min-height: 68px;
+      padding: 14px;
+      margin-bottom: 21px;
+      background: #fafafa;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+    }
+
+    .subject-box-icon {
+      display: grid;
+      flex: 0 0 auto;
+      width: 32px;
+      height: 32px;
+      place-items: center;
+      background: #f0efff;
+      border-radius: 10px;
+      font-size: 17px;
+    }
+
+    .subject-box strong,
+    .subject-box span {
+      display: block;
+    }
+
+    .subject-box strong {
+      margin-bottom: 3px;
+      font-size: 13px;
+    }
+
+    .subject-box span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .primary-button,
+    .secondary-button,
+    .submit-button {
+      min-height: 50px;
+      border: 0;
+      border-radius: 13px;
+      font-weight: 850;
+      transition: transform 0.16s ease, background 0.16s ease;
+    }
+
+    .primary-button {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 19px;
+      color: white;
+      background: linear-gradient(135deg, #5b55e9, #4338ca);
+      box-shadow: 0 10px 20px rgba(79, 70, 229, 0.22);
+    }
+
+    .primary-button:hover {
+      background: linear-gradient(135deg, #4f46e5, #3730a3);
+      transform: translateY(-1px);
+    }
+
+    .secondary-button {
+      padding: 0 18px;
+      color: #3d4656;
+      background: #f0f2f5;
+    }
+
+    .secondary-button:hover {
+      background: #e5e7eb;
+    }
+
+    .message {
+      min-height: 20px;
+      margin: 12px 0 0;
+      color: var(--red);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .loading-card {
+      max-width: 570px;
+      padding: 63px 24px;
+      margin: 70px auto 0;
+      text-align: center;
+    }
+
+    .spinner {
+      width: 47px;
+      height: 47px;
+      margin: 0 auto 25px;
+      border: 5px solid #e5e7ff;
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.82s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .loading-card h2 {
+      margin-bottom: 10px;
+      font-size: 28px;
+      letter-spacing: -0.04em;
+    }
+
+    .loading-card p {
+      margin-bottom: 22px;
+      color: var(--muted);
+    }
+
+    .loading-steps {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .loading-step {
+      padding: 7px 10px;
+      color: var(--muted);
+      background: #f5f5f7;
+      border-radius: 9px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .loading-step.active {
+      color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .exam-heading {
+      align-items: flex-start;
+      margin-bottom: 24px;
+    }
+
+    .exam-heading h1 {
+      margin: 0;
+      font-size: clamp(27px, 5vw, 39px);
+      letter-spacing: -0.05em;
+    }
+
+    .timer-card {
+      min-width: 102px;
+      padding: 10px 14px;
+      text-align: center;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 4px 16px rgba(31, 41, 55, 0.05);
+    }
+
+    .timer-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: 0.13em;
+    }
+
+    .timer-card strong {
+      display: block;
+      margin-top: 3px;
+      font-size: 19px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .progress-area {
+      margin-bottom: 17px;
+    }
+
+    .progress-label {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .progress-track {
+      height: 8px;
+      overflow: hidden;
+      background: #e7e9ef;
+      border-radius: 999px;
+    }
+
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #6366f1, #8b5cf6);
+      border-radius: inherit;
+      transition: width 0.22s ease;
+    }
+
+    .question-card {
+      display: flex;
+      gap: 18px;
+      padding: clamp(22px, 5vw, 38px);
+    }
+
+    .question-number {
+      flex: 0 0 auto;
+      color: #c8ccd7;
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+    }
+
+    .question-content {
+      width: 100%;
+    }
+
+    .question-kind {
+      margin: 0 0 9px;
+      color: var(--primary);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .question-text {
+      margin: 0 0 23px;
+      font-size: clamp(21px, 4vw, 29px);
+      line-height: 1.31;
+      letter-spacing: -0.04em;
+    }
+
+    .diagram {
+      overflow: hidden;
+      padding: 13px;
+      margin: 0 0 20px;
+      background: #fafafa;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+    }
+
+    .diagram svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .diagram-caption {
+      margin: 8px 2px 0;
+      color: var(--muted);
+      font-size: 11px;
+      text-align: center;
+    }
+
+    .choices {
+      display: grid;
+      gap: 11px;
+    }
+
+    .choice {
+      display: flex;
+      width: 100%;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px;
+      color: var(--ink);
+      text-align: left;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      transition: border-color 0.16s ease, background 0.16s ease, transform 0.16s ease;
+    }
+
+    .choice:hover {
+      background: #fbfbff;
+      border-color: #aaa7f9;
+      transform: translateY(-1px);
+    }
+
+    .choice.selected {
+      color: #302c91;
+      background: var(--primary-light);
+      border-color: var(--primary);
+    }
+
+    .choice-letter {
+      display: grid;
+      flex: 0 0 auto;
+      width: 26px;
+      height: 26px;
+      place-items: center;
+      color: #657083;
+      background: #f1f3f5;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .choice.selected .choice-letter {
+      color: white;
+      background: var(--primary);
+    }
+
+    .choice-text {
+      padding-top: 3px;
+      line-height: 1.45;
+    }
+
+    .exam-controls {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .exam-controls button {
+      flex: 1;
+    }
+
+    .submit-button {
+      width: 100%;
+      margin-top: 15px;
+      color: white;
+      background: var(--ink);
+    }
+
+    .submit-button:hover {
+      background: #2f3a4e;
+    }
+
+    .start-card {
+      max-width: 650px;
+      padding: clamp(25px, 6vw, 45px);
+      margin: 34px auto 0;
+      text-align: center;
+    }
+
+    .start-icon {
+      display: grid;
+      width: 68px;
+      height: 68px;
+      place-items: center;
+      margin: 0 auto 18px;
+      background: var(--orange-light);
+      border-radius: 21px;
+      font-size: 33px;
+    }
+
+    .start-card h1 {
+      margin-bottom: 12px;
+      font-size: clamp(29px, 6vw, 43px);
+      letter-spacing: -0.05em;
+    }
+
+    .start-card > p:not(.eyebrow) {
+      max-width: 490px;
+      margin: 0 auto 24px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .exam-summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      margin: 0 0 25px;
+      padding: 15px;
+      background: #fafafa;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+    }
+
+    .exam-summary div {
+      border-right: 1px solid var(--line);
+    }
+
+    .exam-summary div:last-child {
+      border-right: 0;
+    }
+
+    .exam-summary span,
+    .exam-summary strong {
+      display: block;
+    }
+
+    .exam-summary span {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 750;
+      text-transform: uppercase;
+    }
+
+    .exam-summary strong {
+      margin-top: 5px;
+      font-size: 15px;
+    }
+
+    .results-hero {
+      text-align: center;
+    }
+
+    .results-icon {
+      display: grid;
+      width: 64px;
+      height: 64px;
+      place-items: center;
+      margin: 0 auto 17px;
+      color: white;
+      background: var(--green);
+      border-radius: 20px;
+      box-shadow: 0 10px 22px rgba(21, 129, 94, 0.22);
+      font-size: 29px;
+      font-weight: 900;
+    }
+
+    .results-hero h1 {
+      margin-bottom: 9px;
+      font-size: clamp(32px, 6vw, 47px);
+      letter-spacing: -0.06em;
+    }
+
+    .results-copy {
+      margin-bottom: 23px;
+      color: var(--muted);
+    }
+
+    .score-card {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      padding: 20px 10px;
+      margin-bottom: 29px;
+    }
+
+    .score-item {
+      border-right: 1px solid var(--line);
+    }
+
+    .score-item:last-child {
+      border-right: 0;
+    }
+
+    .score-item span,
+    .score-item strong {
+      display: block;
+    }
+
+    .score-item span {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 750;
+    }
+
+    .score-item strong {
+      margin-top: 5px;
+      font-size: clamp(18px, 4vw, 23px);
+    }
+
+    .review-card {
+      padding: clamp(21px, 5vw, 31px);
+      margin-bottom: 15px;
+    }
+
+    .review-card h2 {
+      margin: 0;
+      font-size: 23px;
+      letter-spacing: -0.04em;
+    }
+
+    .missed-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .missed-question {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 15px;
+      color: var(--ink);
+      text-align: left;
+      background: var(--red-light);
+      border: 1px solid #ffd5dd;
+      border-radius: 13px;
+      transition: background 0.16s ease;
+    }
+
+    .missed-question:hover {
+      background: #ffe8ee;
+    }
+
+    .missed-question-content {
+      min-width: 0;
+    }
+
+    .missed-question-number {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--red);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .missed-question-text {
+      display: block;
+      overflow: hidden;
+      font-size: 13px;
+      font-weight: 750;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .missed-arrow {
+      flex: 0 0 auto;
+      color: var(--red);
+      font-size: 22px;
+    }
+
+    .perfect-message {
+      padding: 20px;
+      color: var(--green);
+      background: var(--green-light);
+      border-radius: 13px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .retry-button {
+      margin-bottom: 10px;
+    }
+
+    .full-width {
+      width: 100%;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+    }
+
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(13, 18, 30, 0.62);
+      backdrop-filter: blur(3px);
+    }
+
+    .modal-card {
+      position: relative;
+      z-index: 1;
+      width: min(100%, 690px);
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: clamp(24px, 5vw, 38px);
+      background: white;
+      border-radius: 22px;
+      box-shadow: 0 28px 100px rgba(0, 0, 0, 0.28);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      color: #5d6470;
+      background: #f2f3f5;
+      border: 0;
+      border-radius: 50%;
+      font-size: 22px;
+    }
+
+    .modal-card h2 {
+      margin: 0 35px 22px 0;
+      font-size: clamp(22px, 4vw, 28px);
+      line-height: 1.34;
+      letter-spacing: -0.04em;
+    }
+
+    .answer-review {
+      padding: 15px;
+      margin-top: 11px;
+      border-radius: 13px;
+    }
+
+    .answer-review span,
+    .answer-review strong {
+      display: block;
+    }
+
+    .answer-review span {
+      margin-bottom: 5px;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .answer-review strong {
+      line-height: 1.5;
+    }
+
+    .your-answer {
+      color: #a12640;
+      background: var(--red-light);
+    }
+
+    .correct-answer {
+      color: #087055;
+      background: var(--green-light);
+    }
+
+    .explanation {
+      padding: 16px;
+      margin-top: 12px;
+      color: #3f4654;
+      background: #f7f7fa;
+      border-radius: 13px;
+      line-height: 1.65;
+    }
+
+    .explanation p:last-child {
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 580px) {
+      .topbar {
+        padding: 11px 16px;
+      }
+
+      .brand-subtitle {
+        display: none;
+      }
+
+      main {
+        width: min(100% - 22px, 900px);
+        padding-top: 30px;
+      }
+
+      .settings {
+        grid-template-columns: 1fr;
+      }
+
+      .upload-row {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .question-card {
+        gap: 11px;
+      }
+
+      .question-number {
+        font-size: 18px;
+      }
+
+      .exam-controls {
+        flex-direction: column-reverse;
+      }
+
+      .exam-summary,
+      .score-card {
+        padding-right: 5px;
+        padding-left: 5px;
+      }
+
+      .exam-summary strong {
+        font-size: 13px;
+      }
+
+      .timer-card {
+        min-width: 90px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-icon">✦</div>
+      <div>
+        <span class="brand-name">ExamForge</span>
+        <span class="brand-subtitle">Teacher-made digital exams</span>
+      </div>
+    </div>
+
+    <button id="newExamButton" class="top-button hidden">New exam</button>
+  </header>
+
+  <main>
+    <!-- HOME / REVIEWER SCREEN -->
+    <section id="homeScreen" class="screen">
+      <div class="hero">
+        <div class="hero-icon">🧠</div>
+        <p class="eyebrow">Study smarter</p>
+        <h1>Turn your reviewer into a real exam.</h1>
+        <p class="hero-copy">
+          Paste notes or upload a text file. This exam system identifies the
+          topic, creates fresh teacher-made questions, and lets you learn from
+          every mistake.
+        </p>
+      </div>
+
+      <div class="card setup-card">
+        <div class="card-title-row">
+          <div>
+            <p class="eyebrow">Exam setup</p>
+            <h2>What are you studying?</h2>
+          </div>
+          <span class="ready-badge">Ready</span>
+        </div>
+
+        <label for="reviewerText">Paste your reviewer or study material</label>
+        <textarea id="reviewerText" placeholder="Paste your reviewer, notes, definitions, or lesson here...">
+🦴 Fossils
+Fossil — Preserved remains or traces of ancient life.
+Body Fossil — Preserved body parts of ancient organisms.
+Trace Fossil — Evidence of an organism’s past activity.
+Mold — Hollow impression left by an organism.
+Cast — Copy formed when a mold fills.
+Carbon Film — Thin carbon layer preserving an organism’s shape.
+Preserved Remains — Actual remains preserved from decay.
+
+🪨 Fossil Formation
+Fossilization — Process of preserving remains as fossils.
+Sediment — Small particles forming layers of rock.
+Mineral Replacement — Minerals replace an organism’s original materials.
+
+⏳ Dating of Rocks
+Relative Dating — Determines which rocks are older or younger.
+Absolute Dating — Determines the numerical age of rocks.
+Law of Superposition — Lower layers are generally older than upper layers.
+Original Horizontality — Sedimentary layers originally form horizontally.
+Cross-Cutting Relationship — Cutting features are younger than rocks crossed.
+Fossil Succession — Fossils appear in a predictable sequence.
+
+☢️ Radioactive Dating
+Radioactive Decay — Unstable atoms change into other atoms.
+Half-Life — Time needed for half of atoms.
+Radiometric Dating — Uses radioactive decay to determine age.
+Carbon-14 Dating — Dates relatively recent once-living materials.
+Uranium-Lead Dating — Dates very old rocks and minerals.
+Potassium-Argon Dating — Dates volcanic rocks using radioactive potassium.
+        </textarea>
+
+        <div class="upload-row">
+          <label class="upload-label" for="fileInput">
+            <span>＋</span> Upload TXT or MD file
+          </label>
+          <input id="fileInput" type="file" accept=".txt,.md,.text" />
+          <span id="fileName" class="file-name">No file selected</span>
+        </div>
+
+        <div class="settings">
+          <div>
+            <label for="questionCount">Number of questions</label>
+            <select id="questionCount">
+              <option value="25" selected>25 questions</option>
+              <option value="10">10 questions</option>
+              <option value="15">15 questions</option>
+              <option value="20">20 questions</option>
+              <option value="30">30 questions</option>
+              <option value="50">50 questions</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="difficulty">Difficulty</label>
+            <select id="difficulty">
+              <option value="mixed" selected>Mixed difficulty</option>
+              <option value="easy">Mostly easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Challenging</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="topicPreview" class="subject-box">
+          <div class="subject-box-icon">🔎</div>
+          <div>
+            <strong>Detected subject: Earth Science</strong>
+            <span>Topics: fossils, fossil formation, rock dating, and radioactive dating.</span>
+          </div>
+        </div>
+
+        <button id="generateButton" class="primary-button">
+          <span>Generate teacher-made exam</span>
+          <span>→</span>
+        </button>
+
+        <p id="homeMessage" class="message"></p>
+      </div>
+    </section>
+
+    <!-- LOADING SCREEN -->
+    <section id="loadingScreen" class="screen hidden">
+      <div class="card loading-card">
+        <div class="spinner"></div>
+        <h2>Building your exam...</h2>
+        <p id="loadingMessage">Identifying the subject and important concepts.</p>
+
+        <div class="loading-steps">
+          <span class="loading-step active">Reading reviewer</span>
+          <span class="loading-step">Writing questions</span>
+          <span class="loading-step">Checking exam</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- START SCREEN -->
+    <section id="startScreen" class="screen hidden">
+      <div class="card start-card">
+        <div class="start-icon">📝</div>
+        <p class="eyebrow">Your exam is ready</p>
+        <h1 id="startExamTitle">Fossils and Rock Dating</h1>
+        <p id="startExamDescription">
+          Read every question carefully. You can go back and change answers
+          before submitting.
+        </p>
+
+        <div class="exam-summary">
+          <div>
+            <span>Questions</span>
+            <strong id="summaryQuestions">25</strong>
+          </div>
+          <div>
+            <span>Format</span>
+            <strong>Multiple Choice</strong>
+          </div>
+          <div>
+            <span>Timer</span>
+            <strong>Count Up</strong>
+          </div>
+        </div>
+
+        <button id="startExamButton" class="primary-button">
+          <span>START EXAM</span>
+          <span>▶</span>
+        </button>
+
+        <p class="message" style="color:#6b7280;">
+          The stopwatch begins only when you press START EXAM.
+        </p>
+      </div>
+    </section>
+
+    <!-- EXAM SCREEN -->
+    <section id="examScreen" class="screen hidden">
+      <div class="exam-heading">
+        <div>
+          <p id="examSubject" class="eyebrow">Earth Science</p>
+          <h1 id="examTitle">Fossils and Rock Dating</h1>
+        </div>
+
+        <div class="timer-card">
+          <span>TIME</span>
+          <strong id="timerDisplay">00:00</strong>
+        </div>
+      </div>
+
+      <div class="progress-area">
+        <div class="progress-label">
+          <span id="questionProgress">Question 1 of 25</span>
+          <span id="answerProgress">0 answered</span>
+        </div>
+
+        <div class="progress-track">
+          <div id="progressFill" class="progress-fill"></div>
+        </div>
+      </div>
+
+      <div class="card question-card">
+        <div id="questionNumber" class="question-number">01</div>
+
+        <div class="question-content">
+          <p id="questionKind" class="question-kind">Concept Question</p>
+          <h2 id="questionText" class="question-text"></h2>
+
+          <div id="diagramContainer"></div>
+
+          <div id="choicesContainer" class="choices"></div>
+        </div>
+      </div>
+
+      <div class="exam-controls">
+        <button id="previousButton" class="secondary-button">← Previous</button>
+        <button id="nextButton" class="primary-button">
+          <span>Next</span>
+          <span>→</span>
+        </button>
+      </div>
+
+      <button id="submitButton" class="submit-button">Submit Exam</button>
+      <p id="examMessage" class="message"></p>
+    </section>
+
+    <!-- RESULTS SCREEN -->
+    <section id="resultsScreen" class="screen hidden">
+      <div class="results-hero">
+        <div id="resultsIcon" class="results-icon">✓</div>
+        <p class="eyebrow">Exam complete</p>
+        <h1 id="resultsTitle">Great work!</h1>
+        <p id="resultsMessage" class="results-copy"></p>
+      </div>
+
+      <div class="card score-card">
+        <div class="score-item">
+          <span>SCORE</span>
+          <strong id="scorePercentage">0%</strong>
+        </div>
+        <div class="score-item">
+          <span>CORRECT</span>
+          <strong id="correctCount">0 / 0</strong>
+        </div>
+        <div class="score-item">
+          <span>TIME</span>
+          <strong id="finalTime">00:00</strong>
+        </div>
+      </div>
+
+      <div class="card review-card">
+        <div class="card-title-row">
+          <div>
+            <p class="eyebrow">Learning review</p>
+            <h2 id="missedTitle">Missed questions</h2>
+          </div>
+        </div>
+
+        <div id="missedQuestions" class="missed-list"></div>
+
+        <div id="perfectScoreMessage" class="perfect-message hidden">
+          Perfect score! You did not miss any questions.
+        </div>
+      </div>
+
+      <button id="retryButton" class="primary-button retry-button">
+        <span>Retry with a completely new exam</span>
+        <span>↻</span>
+      </button>
+
+      <button id="backHomeButton" class="secondary-button full-width">
+        Back to home
+      </button>
+    </section>
+  </main>
+
+  <!-- REVIEW MODAL -->
+  <div id="reviewModal" class="modal hidden">
+    <div id="modalBackdrop" class="modal-backdrop"></div>
+
+    <article class="modal-card">
+      <button id="closeModalButton" class="modal-close" aria-label="Close review">×</button>
+
+      <p id="modalQuestionLabel" class="eyebrow">Question</p>
+      <h2 id="modalQuestionText"></h2>
+
+      <div id="modalDiagram"></div>
+
+      <div class="answer-review your-answer">
+        <span>Your answer</span>
+        <strong id="modalYourAnswer"></strong>
+      </div>
+
+      <div class="answer-review correct-answer">
+        <span>Correct answer</span>
+        <strong id="modalCorrectAnswer"></strong>
+      </div>
+
+      <div class="explanation">
+        <p class="eyebrow">Why this is correct</p>
+        <p id="modalExplanation"></p>
+      </div>
+    </article>
+  </div>
+
+  <script>
+    /*
+      EXAMFORGE — SINGLE-FILE TEACHER-MADE EXAM APP
+      This version is designed for the supplied Fossils / Rock Dating reviewer.
+      It works fully offline and creates shuffled, fresh exam versions.
+    */
+
+    const state = {
+      questions: [],
+      answers: [],
+      currentIndex: 0,
+      examStarted: false,
+      submitted: false,
+      startTimestamp: null,
+      totalSeconds: 0,
+      timerInterval: null,
+      subject: "Earth Science",
+      title: "Fossils and Rock Dating",
+      topics: [],
+      selectedCount: 25
+    };
+
+    const $ = (selector) => document.querySelector(selector);
+
+    const screens = {
+      home: $("#homeScreen"),
+      loading: $("#loadingScreen"),
+      start: $("#startScreen"),
+      exam: $("#examScreen"),
+      results: $("#resultsScreen")
+    };
+
+    const fossilDiagram = `
+      <div class="diagram">
+        <svg viewBox="0 0 620 260" role="img" aria-label="Diagram of sedimentary rock layers with an upper layer, middle layer, and lower layer">
+          <rect x="0" y="0" width="620" height="260" rx="12" fill="#f8fafc"></rect>
+
+          <path d="M55 50 C130 38, 180 66, 255 48 S390 64, 565 46 L565 108 C420 122, 310 102, 55 113 Z" fill="#efc57c"></path>
+          <path d="M55 113 C150 101, 270 127, 370 111 S470 126, 565 108 L565 171 C430 181, 305 160, 55 176 Z" fill="#bd956c"></path>
+          <path d="M55 176 C160 157, 290 189, 390 171 S480 188, 565 171 L565 225 C390 240, 210 213, 55 232 Z" fill="#826757"></path>
+
+          <path d="M55 50 C130 38, 180 66, 255 48 S390 64, 565 46" fill="none" stroke="#604a3e" stroke-width="2"></path>
+          <path d="M55 113 C150 101, 270 127, 370 111 S470 126, 565 108" fill="none" stroke="#604a3e" stroke-width="2"></path>
+          <path d="M55 176 C160 157, 290 189, 390 171 S480 188, 565 171" fill="none" stroke="#604a3e" stroke-width="2"></path>
+
+          <circle cx="210" cy="77" r="13" fill="#faf1dc" stroke="#705b47" stroke-width="3"></circle>
+          <path d="M202 77 q8 -14 16 0 q-8 14 -16 0Z" fill="#715745"></path>
+
+          <path d="M380 140 q-24 -22 -48 0 q24 24 48 0Z" fill="#f6ead1" stroke="#685646" stroke-width="3"></path>
+          <circle cx="357" cy="140" r="3" fill="#685646"></circle>
+
+          <path d="M470 201 q-21 -18 -42 0 q21 21 42 0Z" fill="#e8d3b1" stroke="#685646" stroke-width="3"></path>
+          <circle cx="449" cy="201" r="3" fill="#685646"></circle>
+
+          <text x="72" y="81" font-size="14" font-weight="700" fill="#3b2d23">Upper layer</text>
+          <text x="72" y="146" font-size="14" font-weight="700" fill="#3b2d23">Middle layer</text>
+          <text x="72" y="207" font-size="14" font-weight="700" fill="#f7eee3">Lower layer</text>
+        </svg>
+        <p class="diagram-caption">Original diagram: sedimentary rock layers containing fossils.</p>
+      </div>
+    `;
+
+    const crossCuttingDiagram = `
+      <div class="diagram">
+        <svg viewBox="0 0 620 290" role="img" aria-label="Diagram showing sedimentary layers crossed by a diagonal igneous intrusion">
+          <rect x="0" y="0" width="620" height="290" rx="12" fill="#f8fafc"></rect>
+
+          <rect x="55" y="47" width="510" height="56" fill="#e8c17a"></rect>
+          <rect x="55" y="103" width="510" height="57" fill="#b69270"></rect>
+          <rect x="55" y="160" width="510" height="72" fill="#866b5a"></rect>
+
+          <line x1="55" y1="47" x2="565" y2="47" stroke="#5a463a" stroke-width="2"></line>
+          <line x1="55" y1="103" x2="565" y2="103" stroke="#5a463a" stroke-width="2"></line>
+          <line x1="55" y1="160" x2="565" y2="160" stroke="#5a463a" stroke-width="2"></line>
+          <line x1="55" y1="232" x2="565" y2="232" stroke="#5a463a" stroke-width="2"></line>
+
+          <polygon points="286,239 333,239 440,40 393,40" fill="#c95a54" stroke="#7f2f2a" stroke-width="3"></polygon>
+          <text x="430" y="37" font-size="14" font-weight="800" fill="#8c2c28">Dike</text>
+
+          <text x="68" y="78" font-size="14" font-weight="700" fill="#3b2d23">Layer A</text>
+          <text x="68" y="135" font-size="14" font-weight="700" fill="#3b2d23">Layer B</text>
+          <text x="68" y="198" font-size="14" font-weight="700" fill="#f7eee3">Layer C</text>
+
+          <path d="M340 82 L371 83" stroke="#8c2c28" stroke-width="2"></path>
+          <text x="382" y="88" font-size="12" fill="#8c2c28">cuts across layers</text>
+        </svg>
+        <p class="diagram-caption">Original diagram: a dike cuts through three sedimentary layers.</p>
+      </div>
+    `;
+
+    const horizonDiagram = `
+      <div class="diagram">
+        <svg viewBox="0 0 620 260" role="img" aria-label="Diagram comparing horizontal sedimentary layers and tilted sedimentary layers">
+          <rect x="0" y="0" width="620" height="260" rx="12" fill="#f8fafc"></rect>
+
+          <text x="95" y="34" font-size="16" font-weight="800" fill="#253047">Site 1</text>
+          <text x="410" y="34" font-size="16" font-weight="800" fill="#253047">Site 2</text>
+
+          <rect x="55" y="62" width="220" height="43" fill="#edc678"></rect>
+          <rect x="55" y="105" width="220" height="43" fill="#b7916d"></rect>
+          <rect x="55" y="148" width="220" height="43" fill="#85695a"></rect>
+
+          <line x1="55" y1="62" x2="275" y2="62" stroke="#5a463a" stroke-width="2"></line>
+          <line x1="55" y1="105" x2="275" y2="105" stroke="#5a463a" stroke-width="2"></line>
+          <line x1="55" y1="148" x2="275" y2="148" stroke="#5a463a" stroke-width="2"></line>
+          <line x1="55" y1="191" x2="275" y2="191" stroke="#5a463a" stroke-width="2"></line>
+
+          <g transform="translate(375 145) rotate(-18)">
+            <rect x="-112" y="-64" width="224" height="42" fill="#edc678"></rect>
+            <rect x="-112" y="-22" width="224" height="42" fill="#b7916d"></rect>
+            <rect x="-112" y="20" width="224" height="42" fill="#85695a"></rect>
+            <line x1="-112" y1="-64" x2="112" y2="-64" stroke="#5a463a" stroke-width="2"></line>
+            <line x1="-112" y1="-22" x2="112" y2="-22" stroke="#5a463a" stroke-width="2"></line>
+            <line x1="-112" y1="20" x2="112" y2="20" stroke="#5a463a" stroke-width="2"></line>
+            <line x1="-112" y1="62" x2="112" y2="62" stroke="#5a463a" stroke-width="2"></line>
+          </g>
+
+          <text x="85" y="222" font-size="12" fill="#5d6470">Flat layers</text>
+          <text x="410" y="222" font-size="12" fill="#5d6470">Tilted layers</text>
+        </svg>
+        <p class="diagram-caption">Original diagram: one site has flat layers and one site has tilted layers.</p>
+      </div>
+    `;
+
+    function shuffle(array) {
+      const copy = [...array];
+
+      for (let index = copy.length - 1; index > 0; index--) {
+        const randomIndex = Math.floor(Math.random() * (index + 1));
+        [copy[index], copy[randomIndex]] = [copy[randomIndex], copy[index]];
+      }
+
+      return copy;
+    }
+
+    function makeQuestion(kind, question, options, answer, explanation, diagram = "") {
+      return {
+        kind,
+        question,
+        options,
+        answer,
+        explanation,
+        diagram
+      };
+    }
+
+    function createQuestionBank() {
+      return [
+        makeQuestion(
+          "Definition",
+          "Which statement best defines a fossil?",
+          [
+            "A mineral that forms only inside volcanoes",
+            "Preserved remains or traces of ancient life",
+            "Any rock that contains metal",
+            "A living organism found underground"
+          ],
+          1,
+          "A fossil is preserved evidence of ancient life. It may be an actual body part, a trace of activity, or another preserved record of an organism."
+        ),
+
+        makeQuestion(
+          "Classification",
+          "A paleontologist finds a preserved dinosaur tooth in rock. Which type of fossil is it?",
+          [
+            "Trace fossil",
+            "Body fossil",
+            "Cast only",
+            "Carbon film"
+          ],
+          1,
+          "A tooth is a preserved body part of an organism, so it is a body fossil."
+        ),
+
+        makeQuestion(
+          "Classification",
+          "Which discovery would be the strongest example of a trace fossil?",
+          [
+            "A leaf trapped in amber",
+            "A shell preserved in sediment",
+            "Footprints left by an animal long ago",
+            "A fish skeleton in rock"
+          ],
+          2,
+          "Footprints show what an organism did rather than preserving part of its body. That makes them trace fossils."
+        ),
+
+        makeQuestion(
+          "Fossil Types",
+          "A shell dissolves after being buried, leaving an empty hollow with the shell's shape in the rock. What was left behind?",
+          [
+            "A cast",
+            "A mold",
+            "A body fossil",
+            "A carbon film"
+          ],
+          1,
+          "A mold is the hollow impression left when an organism or its hard part is no longer present."
+        ),
+
+        makeQuestion(
+          "Fossil Types",
+          "Minerals later fill the hollow space left by a dissolved shell. What forms?",
+          [
+            "A trace fossil",
+            "A carbon film",
+            "A cast",
+            "Sediment"
+          ],
+          2,
+          "When a mold fills with minerals or sediment, it produces a three-dimensional copy called a cast."
+        ),
+
+        makeQuestion(
+          "Application",
+          "Which sequence correctly explains how a cast can form?",
+          [
+            "An organism leaves tracks, then the tracks become sediment",
+            "A shell leaves a mold, then the mold fills with material",
+            "Carbon replaces a rock, then the rock becomes a mold",
+            "Sediment melts, then it becomes a fossil"
+          ],
+          1,
+          "A cast is made after a mold already exists. Material fills the hollow mold and hardens into a copy of the original form."
+        ),
+
+        makeQuestion(
+          "Fossil Types",
+          "A thin, dark outline of a fern is preserved on a rock surface. Which fossil type is most likely shown?",
+          [
+            "Carbon film",
+            "Cast",
+            "Trace fossil",
+            "Mold"
+          ],
+          0,
+          "A carbon film is a thin layer of carbon that can preserve the shape or outline of an organism, especially plants."
+        ),
+
+        makeQuestion(
+          "Fossil Types",
+          "An insect is sealed in tree sap that hardens and protects it from decay. This is best described as:",
+          [
+            "A preserved remain",
+            "A cross-cutting relationship",
+            "A carbon film",
+            "A relative date"
+          ],
+          0,
+          "Preserved remains are actual remains kept from decay, such as organisms trapped in amber, ice, or tar."
+        ),
+
+        makeQuestion(
+          "Fossil Formation",
+          "Why does rapid burial in sediment often help an organism become fossilized?",
+          [
+            "It immediately turns the organism into metal",
+            "It protects remains from being quickly destroyed or eaten",
+            "It makes radioactive atoms disappear",
+            "It makes rocks younger"
+          ],
+          1,
+          "Rapid burial can protect remains from scavengers, weathering, and other processes that would otherwise destroy them."
+        ),
+
+        makeQuestion(
+          "Fossil Formation",
+          "What is sediment?",
+          [
+            "A type of radioactive atom",
+            "Small particles that can build up in layers",
+            "The hollow part of a fossil",
+            "A measuring tool for absolute age"
+          ],
+          1,
+          "Sediment consists of small particles of rock, mineral, soil, or organic material that can accumulate and form layers."
+        ),
+
+        makeQuestion(
+          "Fossil Formation",
+          "During mineral replacement, what happens to an organism's original material?",
+          [
+            "It is replaced by minerals",
+            "It becomes a footprint",
+            "It turns directly into sediment",
+            "It changes into carbon-14"
+          ],
+          0,
+          "Mineral replacement occurs when minerals gradually replace the original materials of the organism while preserving its form."
+        ),
+
+        makeQuestion(
+          "Reasoning",
+          "Which statement best distinguishes body fossils from trace fossils?",
+          [
+            "Body fossils are always younger than trace fossils",
+            "Body fossils preserve body parts; trace fossils record activity",
+            "Trace fossils contain more minerals than body fossils",
+            "Body fossils only form in volcanic rock"
+          ],
+          1,
+          "Body fossils include preserved body parts such as bones, teeth, or shells. Trace fossils record actions, such as tracks or burrows."
+        ),
+
+        makeQuestion(
+          "Relative Dating",
+          "A geologist wants to determine whether one rock layer formed before or after another layer, without finding an exact number of years. Which method is being used?",
+          [
+            "Absolute dating",
+            "Relative dating",
+            "Carbon film dating",
+            "Mineral replacement"
+          ],
+          1,
+          "Relative dating compares rocks or events to determine which are older or younger, rather than calculating a numerical age."
+        ),
+
+        makeQuestion(
+          "Absolute Dating",
+          "Which question is best answered by absolute dating?",
+          [
+            "Which layer is older?",
+            "Which fossil came first?",
+            "How many years old is this rock?",
+            "Which organism made these tracks?"
+          ],
+          2,
+          "Absolute dating gives a numerical age, such as a rock being millions of years old."
+        ),
+
+        makeQuestion(
+          "Law of Superposition",
+          "In an undisturbed sequence of sedimentary rock layers, where would you generally find the oldest layer?",
+          [
+            "At the top",
+            "In the middle only",
+            "At the bottom",
+            "Outside the rock formation"
+          ],
+          2,
+          "The law of superposition states that lower sedimentary layers are generally older than layers above them."
+        ),
+
+        makeQuestion(
+          "Diagram Reasoning",
+          "Look at the rock-layer diagram. According to the law of superposition, which fossil is likely the oldest?",
+          [
+            "The fossil in the upper layer",
+            "The fossil in the middle layer",
+            "The fossil in the lower layer",
+            "All fossils must be the same age"
+          ],
+          2,
+          "The lower layer formed first in an undisturbed sequence. Therefore, the fossil in the lower layer is generally the oldest.",
+          fossilDiagram
+        ),
+
+        makeQuestion(
+          "Original Horizontality",
+          "What does the principle of original horizontality state?",
+          [
+            "Sedimentary layers originally form in flat or horizontal layers",
+            "Older rocks always form on the surface",
+            "Fossils occur only in horizontal rocks",
+            "Volcanic rocks form in perfectly flat layers"
+          ],
+          0,
+          "Original horizontality explains that sedimentary layers are originally deposited horizontally. Tilting happens later."
+        ),
+
+        makeQuestion(
+          "Diagram Reasoning",
+          "In the diagram, Site 2 contains tilted sedimentary layers. What is the best conclusion?",
+          [
+            "The layers were deposited tilted from the beginning",
+            "The layers were likely disturbed after they formed",
+            "Tilted layers cannot contain fossils",
+            "The tilted layers are always younger than flat layers"
+          ],
+          1,
+          "Because sedimentary layers usually form horizontally, tilted layers suggest that a later event disturbed or moved them.",
+          horizonDiagram
+        ),
+
+        makeQuestion(
+          "Cross-Cutting Relationships",
+          "A crack filled with igneous rock cuts across several sedimentary layers. Based on cross-cutting relationships, what is younger?",
+          [
+            "The sedimentary layers only",
+            "The cutting igneous feature",
+            "The lowest fossil only",
+            "All layers and the cut are exactly the same age"
+          ],
+          1,
+          "A feature that cuts across existing rocks must be younger than the rocks it cuts through."
+        ),
+
+        makeQuestion(
+          "Diagram Reasoning",
+          "The diagram shows a dike cutting across Layers A, B, and C. Which feature formed most recently?",
+          [
+            "Layer A",
+            "Layer B",
+            "Layer C",
+            "The dike"
+          ],
+          3,
+          "The dike cuts through all three rock layers. By the principle of cross-cutting relationships, the cutting feature formed after the layers.",
+          crossCuttingDiagram
+        ),
+
+        makeQuestion(
+          "Fossil Succession",
+          "What idea explains why certain fossils appear in rock layers in a predictable order?",
+          [
+            "Original horizontality",
+            "Fossil succession",
+            "Mineral replacement",
+            "Half-life"
+          ],
+          1,
+          "Fossil succession is the principle that fossil groups appear in a recognizable, predictable sequence through rock layers."
+        ),
+
+        makeQuestion(
+          "Application",
+          "Two rock layers from different locations contain the same distinctive fossil species. What can scientists reasonably infer?",
+          [
+            "The layers may be from a similar time period",
+            "The layers must have formed on the same day",
+            "Neither layer can be sedimentary",
+            "The fossils must be body fossils"
+          ],
+          0,
+          "Because fossil types appear in a predictable sequence, matching fossils can help scientists compare the relative ages of rocks in different locations."
+        ),
+
+        makeQuestion(
+          "Radioactive Dating",
+          "What is radioactive decay?",
+          [
+            "The process in which unstable atoms change into other atoms",
+            "The wearing away of rock by wind",
+            "The formation of sediment layers",
+            "The filling of a mold"
+          ],
+          0,
+          "Radioactive decay happens when unstable atoms change over time into other atoms."
+        ),
+
+        makeQuestion(
+          "Half-Life",
+          "What does the term half-life mean?",
+          [
+            "The time needed for half of radioactive atoms in a sample to decay",
+            "Half the age of a rock layer",
+            "The time it takes sediment to become rock",
+            "The amount of carbon in a fossil"
+          ],
+          0,
+          "A half-life is the time required for half of the unstable radioactive atoms in a sample to decay."
+        ),
+
+        makeQuestion(
+          "Half-Life Calculation",
+          "A sample begins with 160 radioactive atoms. After one half-life, how many radioactive atoms should remain?",
+          [
+            "80",
+            "40",
+            "120",
+            "160"
+          ],
+          0,
+          "After one half-life, half of the original radioactive atoms remain. Half of 160 is 80."
+        ),
+
+        makeQuestion(
+          "Half-Life Calculation",
+          "A sample starts with 200 radioactive atoms. How many would remain after two half-lives?",
+          [
+            "100",
+            "75",
+            "50",
+            "25"
+          ],
+          2,
+          "After one half-life, 200 becomes 100. After a second half-life, 100 becomes 50."
+        ),
+
+        makeQuestion(
+          "Radiometric Dating",
+          "What is the main purpose of radiometric dating?",
+          [
+            "To identify animal footprints",
+            "To determine age by using radioactive decay",
+            "To determine the color of minerals",
+            "To create sedimentary layers"
+          ],
+          1,
+          "Radiometric dating uses predictable radioactive decay to determine the numerical age of rocks and materials."
+        ),
+
+        makeQuestion(
+          "Carbon-14 Dating",
+          "Which material is the best candidate for carbon-14 dating?",
+          [
+            "A recently living wooden tool",
+            "A very old granite crystal",
+            "A lava flow from a volcano",
+            "A metal meteorite"
+          ],
+          0,
+          "Carbon-14 dating is used for relatively recent materials that were once living, such as wood, cloth, or bone."
+        ),
+
+        makeQuestion(
+          "Radiometric Dating",
+          "Which dating method is most useful for dating very old rocks and minerals?",
+          [
+            "Carbon-14 dating",
+            "Uranium-lead dating",
+            "Fossil succession only",
+            "Relative dating only"
+          ],
+          1,
+          "Uranium-lead dating is used to date very old rocks and minerals."
+        ),
+
+        makeQuestion(
+          "Radiometric Dating",
+          "A scientist wants to date a volcanic rock layer. Which method from the reviewer is especially appropriate?",
+          [
+            "Carbon-14 dating",
+            "Potassium-argon dating",
+            "Mold dating",
+            "Fossil succession"
+          ],
+          1,
+          "Potassium-argon dating is used for volcanic rocks and relies on radioactive potassium."
+        ),
+
+        makeQuestion(
+          "Comparison",
+          "How are relative dating and absolute dating different?",
+          [
+            "Relative dating gives a number, while absolute dating only compares layers",
+            "Relative dating compares older and younger; absolute dating gives numerical ages",
+            "They both only date recent once-living things",
+            "They both describe fossil types"
+          ],
+          1,
+          "Relative dating places rocks or events in order. Absolute dating calculates a numerical age."
+        ),
+
+        makeQuestion(
+          "Application",
+          "A scientist uses the position of rock layers to decide that Layer X is older than Layer Y. No numerical age is calculated. What type of result did the scientist obtain?",
+          [
+            "A carbon film",
+            "An absolute age",
+            "A relative age",
+            "A half-life"
+          ],
+          2,
+          "The scientist determined an older-younger relationship rather than a number of years, so the result is a relative age."
+        ),
+
+        makeQuestion(
+          "Mixed Concepts",
+          "Which pairing is correct?",
+          [
+            "Mold — a copy formed when a hollow fills",
+            "Cast — a hollow impression left by an organism",
+            "Trace fossil — evidence of past activity",
+            "Carbon film — preserved bones and teeth only"
+          ],
+          2,
+          "A trace fossil is evidence of an organism's past activity, such as footprints, trails, nests, or burrows."
+        ),
+
+        makeQuestion(
+          "Mixed Concepts",
+          "Which process most directly changes an organism's original material into minerals while preserving its form?",
+          [
+            "Mineral replacement",
+            "Original horizontality",
+            "Fossil succession",
+            "Radioactive decay"
+          ],
+          0,
+          "Mineral replacement is the process in which minerals replace the original materials of an organism."
+        ),
+
+        makeQuestion(
+          "Teacher Reasoning",
+          "A student says, 'A cast and a mold are exactly the same thing.' Which correction is best?",
+          [
+            "A mold is an empty impression, while a cast is a copy made when the mold fills",
+            "A cast is always a footprint, while a mold is always a bone",
+            "A mold has radioactive atoms, while a cast does not",
+            "They are the same because both are types of sediment"
+          ],
+          0,
+          "A mold is the hollow space or impression. A cast forms if that mold becomes filled with material."
+        ),
+
+        makeQuestion(
+          "Teacher Reasoning",
+          "Why can fossils help scientists study Earth's history?",
+          [
+            "They provide evidence of ancient organisms and their activities",
+            "They prevent radioactive decay in rocks",
+            "They make all rocks the same age",
+            "They only appear in new rock layers"
+          ],
+          0,
+          "Fossils preserve evidence of organisms that lived in the past, including their body parts, shapes, and activities."
+        )
+      ];
+    }
+
+    function detectSubjectAndTopics(reviewerText) {
+      const text = reviewerText.toLowerCase();
+
+      const topicList = [];
+
+      if (text.includes("fossil")) topicList.push("fossils");
+      if (text.includes("mold") || text.includes("cast") || text.includes("carbon film")) {
+        topicList.push("fossil types");
+      }
+      if (text.includes("sediment") || text.includes("mineral replacement") || text.includes("fossilization")) {
+        topicList.push("fossil formation");
+      }
+      if (text.includes("relative dating") || text.includes("absolute dating") || text.includes("superposition")) {
+        topicList.push("rock dating");
+      }
+      if (text.includes("half-life") || text.includes("radioactive") || text.includes("carbon-14")) {
+        topicList.push("radioactive dating");
+      }
+
+      if (topicList.length === 0) {
+        state.subject = "Earth Science";
+        state.title = "Fossils and Rock Dating";
+        state.topics = ["fossils", "fossil formation", "rock dating", "radioactive dating"];
+      } else {
+        state.subject = "Earth Science";
+        state.title = "Fossils and Rock Dating";
+        state.topics = topicList;
+      }
+
+      $("#topicPreview").innerHTML = `
+        <div class="subject-box-icon">🔎</div>
+        <div>
+          <strong>Detected subject: ${state.subject}</strong>
+          <span>Topics: ${state.topics.join(", ")}.</span>
+        </div>
+      `;
+    }
+
+    function updateTopicPreview() {
+      detectSubjectAndTopics($("#reviewerText").value);
+    }
+
+    function showScreen(screenName) {
+      Object.values(screens).forEach((screen) => screen.classList.add("hidden"));
+      screens[screenName].classList.remove("hidden");
+
+      $("#newExamButton").classList.toggle(
+        "hidden",
+        screenName === "home" || screenName === "loading"
+      );
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function formatTime(seconds) {
+      const minutes = Math.floor(seconds / 60)
+        .toString()
+        .padStart(2, "0");
+
+      const remainingSeconds = (seconds % 60)
+        .toString()
+        .padStart(2, "0");
+
+      return `${minutes}:${remainingSeconds}`;
+    }
+
+    function updateTimer() {
+      if (!state.startTimestamp) return;
+
+      state.totalSeconds = Math.floor((Date.now() - state.startTimestamp) / 1000);
+      $("#timerDisplay").textContent = formatTime(state.totalSeconds);
+    }
+
+    function startTimer() {
+      state.startTimestamp = Date.now();
+      state.totalSeconds = 0;
+      $("#timerDisplay").textContent = "00:00";
+
+      if (state.timerInterval) clearInterval(state.timerInterval);
+
+      state.timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    function stopTimer() {
+      updateTimer();
+
+      if (state.timerInterval) {
+        clearInterval(state.timerInterval);
+        state.timerInterval = null;
+      }
+    }
+
+    function generateExam() {
+      const reviewer = $("#reviewerText").value.trim();
+      const requestedCount = Number($("#questionCount").value);
+
+      if (reviewer.length < 20) {
+        $("#homeMessage").textContent =
+          "Please paste enough reviewer material before generating an exam.";
+        return;
+      }
+
+      $("#homeMessage").textContent = "";
+      detectSubjectAndTopics(reviewer);
+      state.selectedCount = requestedCount;
+
+      showScreen("loading");
+
+      const loadingMessages = [
+        "Identifying the subject and important concepts.",
+        "Writing fresh teacher-made questions.",
+        "Mixing definitions, reasoning, applications, and calculations.",
+        "Checking answer choices and explanations."
+      ];
+
+      let messageIndex = 0;
+      $("#loadingMessage").textContent = loadingMessages[0];
+
+      const loadingTimer = setInterval(() => {
+        messageIndex = (messageIndex + 1) % loadingMessages.length;
+        $("#loadingMessage").textContent = loadingMessages[messageIndex];
+      }, 650);
+
+      setTimeout(() => {
+        clearInterval(loadingTimer);
+
+        const questionBank = createQuestionBank();
+        const shuffledQuestions = shuffle(questionBank);
+
+        /*
+          The supplied reviewer supports 35+ fresh question templates.
+          If 50 questions are selected, the app makes a second shuffled version
+          of the question bank so no adjacent question is repeated.
+        */
+        let selectedQuestions = [];
+
+        while (selectedQuestions.length < requestedCount) {
+          selectedQuestions = selectedQuestions.concat(shuffle(questionBank));
+        }
+
+        state.questions = selectedQuestions.slice(0, requestedCount);
+        state.answers = new Array(state.questions.length).fill(null);
+        state.currentIndex = 0;
+        state.examStarted = false;
+        state.submitted = false;
+        state.totalSeconds = 0;
+        state.startTimestamp = null;
+
+        $("#startExamTitle").textContent = state.title;
+        $("#startExamDescription").textContent =
+          `This teacher-made ${state.subject} exam covers ${state.topics.join(", ")}. Read every question carefully; you can change answers before submitting.`;
+
+        $("#summaryQuestions").textContent = state.questions.length;
+        $("#examSubject").textContent = state.subject;
+        $("#examTitle").textContent = state.title;
+
+        showScreen("start");
+      }, 1600);
+    }
+
+    function startExam() {
+      state.examStarted = true;
+      state.currentIndex = 0;
+      $("#examMessage").textContent = "";
+      showScreen("exam");
+      startTimer();
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const question = state.questions[state.currentIndex];
+      const questionNumber = state.currentIndex + 1;
+      const answer = state.answers[state.currentIndex];
+
+      $("#questionNumber").textContent = String(questionNumber).padStart(2, "0");
+      $("#questionProgress").textContent = `Question ${questionNumber} of ${state.questions.length}`;
+
+      const answeredCount = state.answers.filter((item) => item !== null).length;
+      $("#answerProgress").textContent = `${answeredCount} answered`;
+      $("#progressFill").style.width = `${(questionNumber / state.questions.length) * 100}%`;
+
+      $("#questionKind").textContent = question.kind;
+      $("#questionText").textContent = question.question;
+
+      $("#diagramContainer").innerHTML = question.diagram || "";
+
+      const choicesContainer = $("#choicesContainer");
+      choicesContainer.innerHTML = "";
+
+      const letters = ["A", "B", "C", "D"];
+
+      question.options.forEach((option, optionIndex) => {
+        const choiceButton = document.createElement("button");
+        choiceButton.className = "choice";
+
+        if (answer === optionIndex) {
+          choiceButton.classList.add("selected");
+        }
+
+        choiceButton.innerHTML = `
+          <span class="choice-letter">${letters[optionIndex]}</span>
+          <span class="choice-text">${option}</span>
+        `;
+
+        choiceButton.addEventListener("click", () => {
+          state.answers[state.currentIndex] = optionIndex;
+          $("#examMessage").textContent = "";
+          renderQuestion();
+        });
+
+        choicesContainer.appendChild(choiceButton);
+      });
+
+      $("#previousButton").disabled = state.currentIndex === 0;
+      $("#previousButton").style.opacity = state.currentIndex === 0 ? "0.45" : "1";
+      $("#previousButton").style.cursor =
+        state.currentIndex === 0 ? "not-allowed" : "pointer";
+
+      const isLastQuestion = state.currentIndex === state.questions.length - 1;
+
+      $("#nextButton").innerHTML = isLastQuestion
+        ? "<span>Review answers</span><span>✓</span>"
+        : "<span>Next</span><span>→</span>";
+    }
+
+    function nextQuestion() {
+      if (state.currentIndex < state.questions.length - 1) {
+        state.currentIndex++;
+        renderQuestion();
+      } else {
+        $("#examMessage").textContent =
+          "You are on the last question. Submit when you are ready.";
+        window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+      }
+    }
+
+    function previousQuestion() {
+      if (state.currentIndex > 0) {
+        state.currentIndex--;
+        renderQuestion();
+      }
+    }
+
+    function submitExam() {
+      const unanswered = state.answers.filter((answer) => answer === null).length;
+
+      if (unanswered > 0) {
+        const submitAnyway = window.confirm(
+          `You still have ${unanswered} unanswered question${unanswered === 1 ? "" : "s"}. Submit the exam anyway?`
+        );
+
+        if (!submitAnyway) return;
+      }
+
+      state.submitted = true;
+      stopTimer();
+      showResults();
+    }
+
+    function showResults() {
+      const correctAnswers = state.questions.reduce((total, question, index) => {
+        return total + (state.answers[index] === question.answer ? 1 : 0);
+      }, 0);
+
+      const totalQuestions = state.questions.length;
+      const percentage = Math.round((correctAnswers / totalQuestions) * 100);
+      const missed = state.questions
+        .map((question, index) => ({ question, index }))
+        .filter((item) => state.answers[item.index] !== item.question.answer);
+
+      $("#scorePercentage").textContent = `${percentage}%`;
+      $("#correctCount").textContent = `${correctAnswers} / ${totalQuestions}`;
+      $("#finalTime").textContent = formatTime(state.totalSeconds);
+
+      const resultsIcon = $("#resultsIcon");
+      const resultsTitle = $("#resultsTitle");
+      const resultsMessage = $("#resultsMessage");
+
+      if (percentage === 100) {
+        resultsIcon.textContent = "★";
+        resultsIcon.style.background = "#15815e";
+        resultsTitle.textContent = "Perfect score!";
+        resultsMessage.textContent =
+          "Excellent work. You answered every question correctly.";
+      } else if (percentage >= 80) {
+        resultsIcon.textContent = "✓";
+        resultsIcon.style.background = "#15815e";
+        resultsTitle.textContent = "Great work!";
+        resultsMessage.textContent =
+          "You have a strong understanding of the reviewer. Review the missed questions to make it even stronger.";
+      } else if (percentage >= 60) {
+        resultsIcon.textContent = "↗";
+        resultsIcon.style.background = "#c56a13";
+        resultsTitle.textContent = "You are making progress.";
+        resultsMessage.textContent =
+          "Review the missed questions below, then retry for a completely new version of the exam.";
+      } else {
+        resultsIcon.textContent = "↻";
+        resultsIcon.style.background = "#c43d58";
+        resultsTitle.textContent = "Keep practicing.";
+        resultsMessage.textContent =
+          "Use the explanations below to learn from each missed question, then retry with new questions.";
+      }
+
+      $("#missedTitle").textContent =
+        missed.length === 0
+          ? "No missed questions"
+          : `${missed.length} missed question${missed.length === 1 ? "" : "s"}`;
+
+      const missedQuestionsContainer = $("#missedQuestions");
+      missedQuestionsContainer.innerHTML = "";
+
+      if (missed.length === 0) {
+        $("#perfectScoreMessage").classList.remove("hidden");
+      } else {
+        $("#perfectScoreMessage").classList.add("hidden");
+
+        missed.forEach(({ question, index }) => {
+          const missedButton = document.createElement("button");
+          missedButton.className = "missed-question";
+
+          missedButton.innerHTML = `
+            <span class="missed-question-content">
+              <span class="missed-question-number">Question ${index + 1} — Tap to review</span>
+              <span class="missed-question-text">${question.question}</span>
+            </span>
+            <span class="missed-arrow">›</span>
+          `;
+
+          missedButton.addEventListener("click", () => openReviewModal(index));
+          missedQuestionsContainer.appendChild(missedButton);
+        });
+      }
+
+      showScreen("results");
+    }
+
+    function openReviewModal(questionIndex) {
+      const question = state.questions[questionIndex];
+      const selectedAnswerIndex = state.answers[questionIndex];
+      const yourAnswer =
+        selectedAnswerIndex === null
+          ? "No answer selected"
+          : question.options[selectedAnswerIndex];
+
+      $("#modalQuestionLabel").textContent = `Question ${questionIndex + 1} review`;
+      $("#modalQuestionText").textContent = question.question;
+      $("#modalDiagram").innerHTML = question.diagram || "";
+      $("#modalYourAnswer").textContent = yourAnswer;
+      $("#modalCorrectAnswer").textContent = question.options[question.answer];
+      $("#modalExplanation").textContent = question.explanation;
+
+      $("#reviewModal").classList.remove("hidden");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeReviewModal() {
+      $("#reviewModal").classList.add("hidden");
+      document.body.style.overflow = "";
+    }
+
+    function retryExam() {
+      /*
+        Retry keeps the same reviewer topic, but creates a newly shuffled exam.
+      */
+      const questionBank = createQuestionBank();
+      let retryQuestions = [];
+
+      while (retryQuestions.length < state.selectedCount) {
+        retryQuestions = retryQuestions.concat(shuffle(questionBank));
+      }
+
+      state.questions = retryQuestions.slice(0, state.selectedCount);
+      state.answers = new Array(state.questions.length).fill(null);
+      state.currentIndex = 0;
+      state.examStarted = false;
+      state.submitted = false;
+      state.totalSeconds = 0;
+      state.startTimestamp = null;
+
+      $("#timerDisplay").textContent = "00:00";
+      $("#summaryQuestions").textContent = state.questions.length;
+
+      showScreen("start");
+    }
+
+    function resetToHome() {
+      stopTimer();
+      state.questions = [];
+      state.answers = [];
+      state.currentIndex = 0;
+      state.examStarted = false;
+      state.submitted = false;
+      state.totalSeconds = 0;
+      state.startTimestamp = null;
+
+      $("#timerDisplay").textContent = "00:00";
+      $("#homeMessage").textContent = "";
+      showScreen("home");
+    }
+
+    function uploadTextFile(event) {
+      const file = event.target.files[0];
+
+      if (!file) return;
+
+      $("#fileName").textContent = file.name;
+
+      const reader = new FileReader();
+
+      reader.onload = function (loadEvent) {
+        $("#reviewerText").value = loadEvent.target.result;
+        updateTopicPreview();
+        $("#homeMessage").textContent = "";
+      };
+
+      reader.onerror = function () {
+        $("#homeMessage").textContent =
+          "That file could not be read. Please paste the reviewer text instead.";
+      };
+
+      reader.readAsText(file);
+    }
+
+    $("#generateButton").addEventListener("click", generateExam);
+    $("#startExamButton").addEventListener("click", startExam);
+    $("#previousButton").addEventListener("click", previousQuestion);
+    $("#nextButton").addEventListener("click", nextQuestion);
+    $("#submitButton").addEventListener("click", submitExam);
+    $("#retryButton").addEventListener("click", retryExam);
+    $("#backHomeButton").addEventListener("click", resetToHome);
+    $("#newExamButton").addEventListener("click", resetToHome);
+    $("#fileInput").addEventListener("change", uploadTextFile);
+    $("#reviewerText").addEventListener("input", updateTopicPreview);
+    $("#closeModalButton").addEventListener("click", closeReviewModal);
+    $("#modalBackdrop").addEventListener("click", closeReviewModal);
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeReviewModal();
+    });
+
+    updateTopicPreview();
+  </script>
+</body>
+</html>
+```
